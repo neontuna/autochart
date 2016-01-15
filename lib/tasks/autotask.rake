@@ -1,8 +1,14 @@
 namespace :autotask do
 
   desc "Update Clients Table from Autotask"
-  task update_clients: [:setup_logger] do
+  task clients: [:setup_logger] do
     Client.update_from_autotask 
+  end
+
+
+  desc "Update Issue Types from Autotask"
+  task issue_types: [:setup_logger] do
+    IssueType.update_from_autotask
   end
 
 end

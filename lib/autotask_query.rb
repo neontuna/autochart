@@ -56,6 +56,19 @@ class AutotaskQuery
     @client.response.body[:query_response][:query_result][:entity_results][:entity]
   end
 
+
+  def issue_types
+    @client.field_info("Ticket").
+      xpath('//AT:Field/AT:Name[text()="IssueType"]/..//AT:PickListValue',
+           AT: AutotaskAPI::Client::NAMESPACE).
+           inject({}) do |memo, node|
+      value, label = node.xpath('(AT:Value | AT:Label)/text()',
+                               AT: AutotaskAPI::Client::NAMESPACE).collect(&:to_s)
+      memo[value] = label
+      memo
+    end
+  end
+
 end
 
 

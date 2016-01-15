@@ -1,4 +1,8 @@
-FactoryGirl.define do  factory :ticket do
+FactoryGirl.define do  factory :issue_type do
+    name "MyString"
+autotask_id 1
+  end
+  factory :ticket do
     title "MyString"
 issue_type_id 1
 client_id 1
