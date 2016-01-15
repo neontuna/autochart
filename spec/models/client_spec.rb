@@ -22,7 +22,7 @@ describe Client do
   end
 
 
-  describe 'find_or_create_by' do
+  describe '.save (override rails default)' do
     it 'updates existing records based on autotask_id' do
       client.save
       new_client = build(:client, autotask_id: client.autotask_id,

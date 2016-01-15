@@ -1,7 +1,20 @@
 class Client < ActiveRecord::Base
 
-  #validates_uniqueness_of :name, :autotask_id
   validates_presence_of :name, :autotask_id
+
+
+  # Pull in clients from Autotask
+  def self.update_from_autotask
+    client_count = Client.count
+    query = AutotaskQuery.new
+    query.accounts_by_owner.each do |a|
+      c = Client.new(name: a[:account_name], autotask_id: a[:id])
+      Rails.logger.debug {"Adding/updating: #{c.autotask_id}-#{c.name}"}
+      c.save
+    end
+    Rails.logger.debug {"Added #{Client.count - client_count} new clients"}
+  end
+
 
   # API updates instead of inserting duplicate clients
   def save
@@ -14,4 +27,5 @@ class Client < ActiveRecord::Base
       super
     end
   end
+
 end
