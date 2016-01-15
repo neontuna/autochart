@@ -22,6 +22,16 @@ class AutotaskQuery
   end
 
 
+  def multi_condition_query(entity, conditions)
+    AutotaskAPI::QueryXML.new do |query|
+      query.entity = entity
+      conditions.each do |c|
+        query.add_condition(c[:field], c[:op], c[:expression])
+      end
+    end
+  end
+
+
   def accounts_by_owner
     @client.query = query('account', 'ownerresourceid', @autotask_account_owner)
     @client.response.body[:query_response][:query_result][:entity_results][:entity]
@@ -35,13 +45,15 @@ class AutotaskQuery
 
 
   def tickets_by_account_and_month(account_id, month, year)
-    begin_date = DateTime.new(year, month).xmlschema
-    end_date = DateTime.new(year, month).end_of_month.xmlschema
-    @client.query = query('ticket', 'accountid', account_id)
-    @client.query.add_condition('LastActivityDate', 'GreaterThanorEquals', begin_date)
-    @client.query.add_condition('LastActivityDate', 'LessThanOrEquals', end_date)
+    begin_date = DateTime.new(year, month).strftime('%Y-%m-%dT%H:%M:%S')
+    end_date = DateTime.new(year, month).end_of_month.strftime('%Y-%m-%dT%H:%M:%S')
 
-    #@client.response.body[:query_response][:query_result][:entity_results][:entity]
+    @client.query = multi_condition_query( 'ticket', 
+      [ { field: 'accountid', op: 'equals', expression: account_id },
+        { field: 'lastactivitydate', op: 'GreaterThanorEquals', expression: begin_date },
+        { field: 'lastactivitydate', op: 'LessThanOrEquals', expression: end_date } ] )
+    
+    @client.response.body[:query_response][:query_result][:entity_results][:entity]
   end
 
 end
