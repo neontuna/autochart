@@ -1,4 +1,10 @@
-FactoryGirl.define do  factory :issue_type do
+FactoryGirl.define do  factory :time_entry do
+    hours_to_bill "9.99"
+date_worked "2016-01-15 19:02:57"
+ticket_id 1
+autotask_id 1
+  end
+  factory :issue_type do
     name "MyString"
 autotask_id 1
   end

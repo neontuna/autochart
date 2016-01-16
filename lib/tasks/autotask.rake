@@ -11,6 +11,10 @@ namespace :autotask do
     IssueType.update_from_autotask
   end
 
+
+  #desc "Update Tickets from Autotask"
+  #task tickets: 
+
 end
 
 # Log to STDOUT when running Rake.

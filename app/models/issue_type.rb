@@ -1,5 +1,6 @@
 class IssueType < ActiveRecord::Base
 
+  has_many :tickets, primary_key: :autotask_id
 
   # API updates instead of inserting duplicate clients
   def save

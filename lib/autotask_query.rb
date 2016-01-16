@@ -57,6 +57,12 @@ class AutotaskQuery
   end
 
 
+  def time_entry_by_ticket_id(ticket_id)
+    @client.query = query('TimeEntry', 'TicketID', ticket_id)
+    @client.response.body[:query_response][:query_result][:entity_results][:entity]
+  end
+
+
   def issue_types
     @client.field_info("Ticket").
       xpath('//AT:Field/AT:Name[text()="IssueType"]/..//AT:PickListValue',
@@ -65,7 +71,7 @@ class AutotaskQuery
       value, label = node.xpath('(AT:Value | AT:Label)/text()',
                                AT: AutotaskAPI::Client::NAMESPACE).collect(&:to_s)
       memo[value] = label
-      memo
+      memo.reject { |k,v| v=~ /temp/i }
     end
   end
 
