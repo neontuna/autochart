@@ -1,6 +1,33 @@
 class Client < ActiveRecord::Base
 
+  has_many :tickets, primary_key: :autotask_id
+
   validates_presence_of :name, :autotask_id
+
+
+  def tickets_for_month(month, year)
+    dt = DateTime.new(year, month)
+    bom = dt.beginning_of_month
+    eom = dt.end_of_month
+    tickets.where("last_activity >= ? AND last_activity <= ?", bom, eom)
+  end
+
+
+  def category_totals(ticket_collection = nil)
+    totals = Hash.new(0)
+
+    if ticket_collection
+      ticket_collection.each do |t|
+        totals[t.issue_type.name] += t.total_hours
+      end
+    else
+      self.tickets.each do |t|
+        totals[t.issue_type.name] += t.total_hours
+      end
+    end
+
+    totals
+  end
 
 
   # Pull in clients from Autotask

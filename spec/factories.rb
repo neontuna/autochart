@@ -1,4 +1,8 @@
-FactoryGirl.define do  factory :time_entry do
+FactoryGirl.define do  factory :user do
+    email "MyString"
+password_digest "MyString"
+  end
+  factory :time_entry do
     hours_to_bill "9.99"
 date_worked "2016-01-15 19:02:57"
 ticket_id 1

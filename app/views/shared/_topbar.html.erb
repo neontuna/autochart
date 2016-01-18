@@ -1,0 +1,29 @@
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="#" class="navbar-brand">AutoChart</a>
+    </div>
+
+    <% if signed_in_user? %>
+
+    <% else %>
+
+      <%= form_tag sessions_path, class: 'navbar-form navbar-right', role: 'logon' do %>
+
+        <div class="form-group">
+          <%= label_tag "Email Address", nil, class: "sr-only" %>
+          <%= email_field_tag :email, nil, placeholder: "Email Address" %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag "Password", nil, class: "sr-only" %>
+          <%= password_field_tag :password, nil, placeholder: "Password" %>
+        </div>
+
+        <%= submit_tag "Logon", class: 'btn btn-primary' %>
+
+      <% end %>
+
+    <% end %>
+  </div>
+</nav>

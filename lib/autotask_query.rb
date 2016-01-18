@@ -8,7 +8,7 @@ class AutotaskQuery
       c.basic_auth = [ Rails.application.secrets.autotask_user,
                        Rails.application.secrets.autotask_password ]
       c.wsdl = Rails.application.secrets.autotask_wsdl
-      c.log = true
+      #c.log = true
     end
   end
 
@@ -53,13 +53,18 @@ class AutotaskQuery
         { field: 'lastactivitydate', op: 'GreaterThanorEquals', expression: begin_date },
         { field: 'lastactivitydate', op: 'LessThanOrEquals', expression: end_date } ] )
     
-    @client.response.body[:query_response][:query_result][:entity_results][:entity]
+    if results = @client.response.body[:query_response][:query_result][:entity_results]
+      [results[:entity]].flatten
+    end
   end
 
 
   def time_entry_by_ticket_id(ticket_id)
     @client.query = query('TimeEntry', 'TicketID', ticket_id)
-    @client.response.body[:query_response][:query_result][:entity_results][:entity]
+    
+    if results = @client.response.body[:query_response][:query_result][:entity_results]
+      [results[:entity]].flatten
+    end
   end
 
 

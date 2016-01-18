@@ -12,8 +12,19 @@ namespace :autotask do
   end
 
 
-  #desc "Update Tickets from Autotask"
-  #task tickets: 
+  desc "Update Client's Last Year of Time Entries from Autotask"
+  task :tickets, [:client_id] => :setup_logger do |t, args|
+    13.times do |n|
+      month = n.months.ago.month
+      year = n.months.ago.year
+      Rails.logger.debug { "Tickets from #{month}-#{year}"}
+      Ticket.update_from_autotask(args.client_id, month, year)
+    end
+
+    Client.find_by_autotask_id(args.client_id).tickets.each do |ticket|
+      TimeEntry.update_from_autotask(ticket.autotask_id)
+    end
+  end
 
 end
 
