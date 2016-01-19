@@ -1,0 +1,5 @@
+<tr>
+  <td><%= ticket.title %></td>
+  <td><%= ticket.issue_type ? ticket.issue_type.name : "No Category" %></td>
+  <td><%= ticket.total_hours(params[:month].to_i, params[:year].to_i) %></td>
+</tr>

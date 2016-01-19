@@ -9,20 +9,19 @@ class Client < ActiveRecord::Base
     dt = DateTime.new(year, month)
     bom = dt.beginning_of_month
     eom = dt.end_of_month
-    tickets.where("last_activity >= ? AND last_activity <= ?", bom, eom)
+    tickets.joins(:time_entries).merge( 
+      TimeEntry.where("date_worked >= ? AND date_worked <= ?", bom, eom) ).uniq
   end
 
 
-  def category_totals(ticket_collection = nil)
+  def category_totals(month, year)
     totals = Hash.new(0)
 
-    if ticket_collection
-      ticket_collection.each do |t|
-        totals[t.issue_type.name] += t.total_hours
-      end
-    else
-      self.tickets.each do |t|
-        totals[t.issue_type.name] += t.total_hours
+    tickets_for_month(month, year).each do |t|
+      if t.issue_type
+        totals[t.issue_type.name] += t.total_hours(month, year)
+      else
+        totals["No Category"] += t.total_hours(month, year)
       end
     end
 

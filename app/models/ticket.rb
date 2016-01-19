@@ -7,8 +7,13 @@ class Ticket < ActiveRecord::Base
   validates_presence_of :title, :autotask_id, :client_id, :issue_type_id
 
 
-  def total_hours
-    time_entries.sum(:hours_to_bill)
+  def total_hours(month, year)
+    dt = DateTime.new(year, month)
+    bom = dt.beginning_of_month
+    eom = dt.end_of_month
+    time_entries.merge( 
+      TimeEntry.where("date_worked >= ? AND date_worked <= ?", bom, eom) ).
+      sum(:hours_to_bill)
   end
 
 
