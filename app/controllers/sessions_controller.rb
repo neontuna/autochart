@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(session_params[:password])
       sign_in(user)
       flash[:success] = "Welcome back!"
-      redirect_back_or(root_path)
+      redirect_to root_path
     else
       flash[:danger] = "We couldn't sign you in!"
       redirect_to root_path

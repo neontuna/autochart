@@ -44,6 +44,15 @@ class AutotaskQuery
   end
 
 
+  def ticket_by_ticket_number(ticket_number)
+    @client.query = query('ticket', 'ticketnumber', ticket_number)
+
+    if results = @client.response.body[:query_response][:query_result][:entity_results]
+      results[:entity]
+    end
+  end
+
+
   def tickets_by_account_and_month(account_id, month, year)
     begin_date = DateTime.new(year, month).strftime('%Y-%m-%dT%H:%M:%S')
     end_date = DateTime.new(year, month).end_of_month.strftime('%Y-%m-%dT%H:%M:%S')

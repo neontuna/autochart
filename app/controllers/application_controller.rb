@@ -27,26 +27,15 @@ class ApplicationController < ActionController::Base
 
   def sign_out
     @current_user = nil
-    session.delete(:forwarding_url)
     cookies.delete(:auth_token)
   end
 
 
   def require_sign_in
     unless signed_in_user?
-      redirect_back_or(root_path)
+      redirect_to root_path
       flash[:warning] = "Please sign in first!"
     end
   end
 
-
-  def redirect_back_or(default)
-    redirect_to(session[:forwarding_url] || default)
-    session.delete(:forwarding_url)
-  end
-
-
-  def store_location
-    session[:forwarding_url] = request.full_path if request.get?
-  end
 end

@@ -1,10 +1,17 @@
 class Ticket < ActiveRecord::Base
 
+  scope :for_ids_with_order, ->(ids) {
+    order = sanitize_sql_array(
+      ["position(id::text in ?)", ids.join(',')]
+    )
+    where(:id => ids).order(order)
+  } 
+
   belongs_to :client, primary_key: :autotask_id
   belongs_to :issue_type, primary_key: :autotask_id
   has_many :time_entries, primary_key: :autotask_id
 
-  validates_presence_of :title, :autotask_id, :client_id, :issue_type_id
+  validates_presence_of :title, :autotask_id, :client_id
 
 
   def total_hours(month, year)
@@ -30,6 +37,16 @@ class Ticket < ActiveRecord::Base
       end
     end
     Rails.logger.debug {"Added #{Ticket.count - ticket_count} new tickets"}
+  end
+
+
+  def self.update_by_ticket_num(ticket_num)
+    ret = AutotaskQuery.new.ticket_by_ticket_number(ticket_num)
+    t = Ticket.new(title: ret[:title], autotask_id: ret[:id], 
+                   client_id: ret[:account_id], issue_type_id: ret[:issue_type],
+                   last_activity: ret[:last_activity_date])
+    Rails.logger.debug {"Adding/updating: #{t.autotask_id}-#{t.title}"}
+    t.save
   end
 
 

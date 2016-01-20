@@ -1,10 +1,37 @@
 <nav class="navbar navbar-inverse navbar-static-top">
   <div class="container">
     <div class="navbar-header">
-      <a href="#" class="navbar-brand">AutoChart</a>
+      <%= link_to "AutoChart!", root_path, class: "navbar-brand" %>
     </div>
 
     <% if signed_in_user? %>
+
+      <%= form_tag report_path, method: :get, class: 'navbar-form navbar-right', role: 'search' do %>
+        <% month = params[:date][:month].to_i if params[:date] %>
+        <% year = params[:date][:year].to_i if params[:date] %>
+
+        <div class="form-group">
+          <%= label_tag "Client", nil, class: "sr-only" %>
+          <%= select_tag("client_id", 
+     options_from_collection_for_select( Client.all, 
+                                         "id", 
+                                         "name",
+                                         params[:client_id] ) ) %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag "Month", nil, class: "sr-only" %>
+          <%= select_month(month ? month : Date.today) %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag "Month", nil, class: "sr-only" %>
+          <%= select_year(year ? year : Date.today, start_year: 1.year.ago.year, end_year: Date.today.year) %>
+        </div>
+
+        <%= submit_tag "Go!", class: 'btn btn-primary' %>
+        
+      <% end %>
 
     <% else %>
 

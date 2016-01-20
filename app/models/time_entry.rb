@@ -2,13 +2,22 @@ class TimeEntry < ActiveRecord::Base
 
   belongs_to :ticket, primary_key: :autotask_id
 
+
+  def self.for_period(start_date, end_date)
+    TimeEntry.where("date_worked >= ? AND date_worked <= ?", 
+      start_date, end_date)#.sum(:hours_to_bill)
+  end
+
+
   def self.update_from_autotask(ticket_id)
     time_entries = AutotaskQuery.new.time_entry_by_ticket_id(ticket_id)
-    time_entries.each do |entry|
-      e = TimeEntry.new( ticket_id: entry[:ticket_id], autotask_id: entry[:id],
-                         hours_to_bill: entry[:hours_worked], 
-                         date_worked: entry[:date_worked] )
-      e.save 
+    if time_entries
+      time_entries.each do |entry|
+        e = TimeEntry.new( ticket_id: entry[:ticket_id], autotask_id: entry[:id],
+                           hours_to_bill: entry[:hours_worked], 
+                           date_worked: entry[:date_worked] )
+        e.save 
+      end
     end
   end
 

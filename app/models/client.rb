@@ -1,5 +1,7 @@
 class Client < ActiveRecord::Base
 
+  default_scope { order('name ASC') }
+
   has_many :tickets, primary_key: :autotask_id
 
   validates_presence_of :name, :autotask_id
@@ -11,6 +13,24 @@ class Client < ActiveRecord::Base
     eom = dt.end_of_month
     tickets.joins(:time_entries).merge( 
       TimeEntry.where("date_worked >= ? AND date_worked <= ?", bom, eom) ).uniq
+  end
+
+
+  def sorted_tickets(month, year)
+    tickets = tickets_for_month(month, year)
+    ids = tickets.group('tickets.id').order('sum_hours_to_bill DESC').
+            sum(:hours_to_bill).keys
+    Ticket.for_ids_with_order(ids)
+  end
+
+
+  def self.order_by_ids(ids)
+    order_by = ["case"]
+    ids.each_with_index.map do |id, index|
+      order_by << "WHEN id='#{id}' THEN #{index}"
+    end
+    order_by << "end"
+    order(order_by.join(" "))
   end
 
 

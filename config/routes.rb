@@ -4,5 +4,6 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:create, :destroy]
 
-  get 'reports/:client_id/:year/:month', to: 'reports#show'
+  get 'report', to: 'reports#show', as: 'report'
+  get 'reports', to: 'reports#index', as: 'report_home'
 end
