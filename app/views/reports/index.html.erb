@@ -1,12 +1,13 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
+      <h1 class="text-center">All Clients</h1>
       <h3 class="text-center"><%= 1.year.ago.year %> Hours</h3>
-      <%= pie_chart(@totals_last_year, library: {legend: {position: 'bottom'}}) %>
+      <%= pie_chart(@totals_last_year) %>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-12">
       <h3 class="text-center"><%= Date.today.year %> Hours</h3>
-      <%= pie_chart(@totals_this_year, library: {legend: {position: 'bottom'}}) %>
+      <%= pie_chart(@totals_this_year) %>
     </div>
   </div>
 </div>

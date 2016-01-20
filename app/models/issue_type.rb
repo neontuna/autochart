@@ -12,6 +12,11 @@ class IssueType < ActiveRecord::Base
         TimeEntry.where("date_worked >= ? AND date_worked <= ?", boy, eoy) ).
         sum(:hours_to_bill)
     end
+
+    totals["No Category"] = Ticket.where("issue_type_id IS NULL").
+      includes(:time_entries).merge( 
+      TimeEntry.where("date_worked >= ? AND date_worked <= ?", boy, eoy) ).
+      sum(:hours_to_bill)
     totals
   end
 
