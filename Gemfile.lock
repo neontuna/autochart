@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:scoop/autotask_api.git
+  remote: git://github.com/scoop/autotask_api.git
   revision: 4996ebf308b785e90db8ca7b6d15051dde320232
   specs:
     autotask_api (0.1.0)

@@ -33,7 +33,7 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'capistrano-rails', group: :development
 
 # Autotask API Wrapper
-gem 'autotask_api', git: 'git@github.com:scoop/autotask_api.git'
+gem 'autotask_api', github: 'scoop/autotask_api'
 
 # Boostrap stuff
 gem 'bootstrap-sass'
